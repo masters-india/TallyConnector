@@ -52,7 +52,6 @@ namespace TallyConnector.Models
                     if (VName == null)
                     {
                         VName = this.LanguageNameList.NameList.NAMES[0];
-                        Name ??= OldName;
                     }
                     if (Name == VName)
                     {
@@ -77,11 +76,11 @@ namespace TallyConnector.Models
             }
             set
             {
-                this.LanguageNameList = new();
+                this.LanguageNameList = new LanguageNameList();
                 
                 if (value != null)
                 {
-                    List<string> lis = value.Split("..\n").ToList();
+                    List<string> lis = value.Split("..\n".ToCharArray()).ToList();
 
                     LanguageNameList.NameList.NAMES.Add(Name);
                     if (value != "")
@@ -125,24 +124,24 @@ namespace TallyConnector.Models
         public Header Header { get; set; }
 
         [XmlElement(ElementName = "BODY")]
-        public AttendanceBody Body { get; set; } = new();
+        public AttendanceBody Body { get; set; } = new AttendanceBody();
     }
 
     [XmlRoot(ElementName = "BODY")]
     public class AttendanceBody
     {
         [XmlElement(ElementName = "DESC")]
-        public Description Desc { get; set; } = new();
+        public Description Desc { get; set; } = new Description();
 
         [XmlElement(ElementName = "DATA")]
-        public AttendanceData Data { get; set; } = new();
+        public AttendanceData Data { get; set; } = new AttendanceData();
     }
 
     [XmlRoot(ElementName = "DATA")]
     public class AttendanceData
     {
         [XmlElement(ElementName = "TALLYMESSAGE")]
-        public AttendanceMessage Message { get; set; } = new();
+        public AttendanceMessage Message { get; set; } = new AttendanceMessage();
 
 
         [XmlElement(ElementName = "COLLECTION")]

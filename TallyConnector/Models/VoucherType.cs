@@ -43,7 +43,6 @@ namespace TallyConnector.Models
                     if (VName == null)
                     {
                         VName = this.LanguageNameList.NameList.NAMES[0];
-                        Name ??= OldName;
                     }
                     if (Name == VName)
                     {
@@ -68,11 +67,11 @@ namespace TallyConnector.Models
             }
             set
             {
-                this.LanguageNameList = new();
+                this.LanguageNameList = new LanguageNameList();
 
                 if (value != null)
                 {
-                    List<string> lis = value.Split("..\n").ToList();
+                    List<string> lis = value.Split("..\n".ToCharArray()).ToList();
 
                     LanguageNameList.NameList.NAMES.Add(Name);
                     if (value != "")
@@ -169,24 +168,24 @@ namespace TallyConnector.Models
         public Header Header { get; set; }
 
         [XmlElement(ElementName = "BODY")]
-        public VTBody Body { get; set; } = new();
+        public VTBody Body { get; set; } = new VTBody();
     }
 
     [XmlRoot(ElementName = "BODY")]
     public class VTBody
     {
         [XmlElement(ElementName = "DESC")]
-        public Description Desc { get; set; } = new();
+        public Description Desc { get; set; } = new Description();
 
         [XmlElement(ElementName = "DATA")]
-        public VTData Data { get; set; } = new();
+        public VTData Data { get; set; } = new VTData ();
     }
 
     [XmlRoot(ElementName = "DATA")]
     public class VTData
     {
         [XmlElement(ElementName = "TALLYMESSAGE")]
-        public VoucherTypeMessage Message { get; set; } = new();
+        public VoucherTypeMessage Message { get; set; } = new VoucherTypeMessage ();
 
         [XmlElement(ElementName = "COLLECTION")]
         public VoucherTypeColl Collection { get; set; } = new VoucherTypeColl();

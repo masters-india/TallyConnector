@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Xml.Serialization;
 
 namespace TallyConnector.Models
@@ -22,17 +21,8 @@ namespace TallyConnector.Models
         public int? TallyId { get; set; }
 
         [XmlAttribute(AttributeName = "NAME")]
-        [JsonIgnore]
-        public string OldName { get; set; }
-
-        private string name;
-        [XmlElement(ElementName = "NAME")]
         [Required]
-        public string Name
-        {
-            get { return (name == null || name == string.Empty) ? OldName : name; }
-            set => name = value;
-        }
+        public string Name { get; set; }
 
         [XmlIgnore]
         public string VName { get; set; }
@@ -104,8 +94,6 @@ namespace TallyConnector.Models
         [XmlIgnore]
         public string RateofExchange { get; set; }
 
-        
-
         private string _OpeningBal;
 
         [XmlElement(ElementName = "OPENINGBALANCE")]
@@ -127,24 +115,16 @@ namespace TallyConnector.Models
             {
                 if (value!=null)
                 {
-                    double t_opbal;
-                    Match CleanedAmount;
-                    if (value.ToString().Contains('='))
+                    if (value.ToString().Contains("="))
                     {
-                        
-                        List<string> SplittedValues = value.ToString().Split('=').ToList();
-                        CleanedAmount = Regex.Match(SplittedValues[1], @"[0-9.]+");
-                        bool Isnegative = SplittedValues[1].Contains('-');
-                        bool sucess = Isnegative ? double.TryParse('-'+CleanedAmount.Value, out t_opbal) : double.TryParse(CleanedAmount.ToString(),out t_opbal);
-                        CleanedOpeningBal = t_opbal;
-                        var ForexInfo = SplittedValues[0].Split('@');
-                        ForexAmount = ForexInfo[0].Trim();
-                        RateofExchange = Regex.Match(ForexInfo[1], @"[0-9.]+").Value;
+                        var s = value.ToString().Split('=');
+                        var k = s[0].Split('@');
+                        ForexAmount = k[0];
+                        RateofExchange = k[1].Split()[2].Split('/')[0];
+                        _OpeningBal = s[1].Split()[2];
                     }
                     else
                     {
-                        double.TryParse(value, out t_opbal);
-                        CleanedOpeningBal = t_opbal;
                         _OpeningBal = value;
                     }
                 }
@@ -156,15 +136,7 @@ namespace TallyConnector.Models
 
             }
         }
-        [XmlIgnore]
-        public double CleanedOpeningBal { get; set; }
 
-        [XmlIgnore]
-        public string ClosingForexAmount { get; set; }
-        [XmlIgnore]
-        public string ClosingRateofExchange { get; set; }
-        [XmlIgnore]
-        public double CleanedClosingBal { get; set; }
 
         private string _ClosingBal;
          
@@ -173,43 +145,19 @@ namespace TallyConnector.Models
         {
             get
             {
-                if (ClosingForexAmount != null && ClosingRateofExchange != null)
+                if (ForexAmount != null && RateofExchange != null)
                 {
-                    _OpeningBal = $"{ClosingForexAmount} @ {ClosingRateofExchange}";
+                    _OpeningBal = $"{ForexAmount} @ {RateofExchange}";
                 }
-                else if (ClosingForexAmount != null)
+                else if (ForexAmount != null)
                 {
-                    _ClosingBal = ClosingForexAmount;
+                    _ClosingBal = ForexAmount;
                 }
                 return _ClosingBal;
             }
             set
             {
-                if (value != null)
-                {
-                    double t_opbal;
-                    if (value.ToString().Contains('='))
-                    {
-                        List<string> SplittedValues = value.ToString().Split('=').ToList();
-                        var CleanedAmount = Regex.Match(SplittedValues[1], @"[0-9.]+");
-                        bool Isnegative = SplittedValues[1].Contains('-');
-                        bool sucess = Isnegative ? double.TryParse('-' + CleanedAmount.Value, out t_opbal) : double.TryParse(CleanedAmount.ToString(), out t_opbal);
-                        CleanedClosingBal = t_opbal;
-                        var ForexInfo = SplittedValues[0].Split('@');
-                        ClosingForexAmount = ForexInfo[0].Trim();
-                        ClosingRateofExchange = Regex.Match(ForexInfo[1], @"[0-9.]+").Value;
-                    }
-                    else
-                    {
-                        double.TryParse(value, out t_opbal);
-                        CleanedClosingBal = t_opbal;
-                        _ClosingBal = value;
-                    }
-                }
-                else
-                {
-                    _ClosingBal = value;
-                }
+                _ClosingBal = value;
             }
             
         }

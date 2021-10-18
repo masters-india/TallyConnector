@@ -44,7 +44,6 @@ namespace TallyConnector.Models
                     if (VName == null)
                     {
                         VName = this.LanguageNameList.NameList.NAMES[0];
-                        Name ??= OldName;
                     }
                     if (Name == VName)
                     {
@@ -69,11 +68,11 @@ namespace TallyConnector.Models
             }
             set
             {
-                this.LanguageNameList = new();
+                this.LanguageNameList = new LanguageNameList();
                 
                 if (value != null)
                 {
-                    List<string> lis = value.Split("..\n").ToList();
+                    List<string> lis = value.Split("..\n".ToCharArray()).ToList();
 
                     LanguageNameList.NameList.NAMES.Add(Name);
                     if (value != "")
@@ -113,24 +112,24 @@ namespace TallyConnector.Models
         public Header Header { get; set; }
 
         [XmlElement(ElementName = "BODY")]
-        public SCBody Body { get; set; } = new();
+        public SCBody Body { get; set; } = new SCBody();
     }
 
     [XmlRoot(ElementName = "BODY")]
     public class SCBody
     {
         [XmlElement(ElementName = "DESC")]
-        public Description Desc { get; set; } = new();
+        public Description Desc { get; set; } = new Description();
 
         [XmlElement(ElementName = "DATA")]
-        public SCData Data { get; set; } = new();
+        public SCData Data { get; set; } = new SCData();
     }
 
     [XmlRoot(ElementName = "DATA")]
     public class SCData
     {
         [XmlElement(ElementName = "TALLYMESSAGE")]
-        public SCMessage Message { get; set; } = new();
+        public SCMessage Message { get; set; } = new SCMessage();
 
         [XmlElement(ElementName = "COLLECTION")]
         public CostCatColl Collection { get; set; } = new CostCatColl();

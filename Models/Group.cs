@@ -1,44 +1,28 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace TallyConnector.Models
 {
-    [XmlRoot(ElementName = "COSTCATEGORY")]
-    public class CostCategory:TallyXmlJson
+    [XmlRoot(ElementName = "GROUP")]
+    public class Group:TallyXmlJson
     {
+
         [XmlElement(ElementName = "MASTERID")]
         public int? TallyId { get; set; }
-
+        
         [XmlAttribute(AttributeName = "NAME")]
-        [JsonIgnore]
-        public string OldName { get; set; }
-
-        private string name;
-        [XmlElement(ElementName = "NAME")]
-        [Required]
-        public string Name
-        {
-            get { return (name == null || name == string.Empty) ? OldName : name; }
-            set => name = value;
-        }
+        public string Name { get; set; }
 
         [XmlIgnore]
         public string VName { get; set; }
 
-        [XmlElement(ElementName = "ALLOCATEREVENUE")]
-        public string AllocateRevenue { get; set; }
+        [XmlElement(ElementName = "PARENT")]
+        public string Parent { get; set; }
 
-        [XmlElement(ElementName = "ALLOCATENONREVENUE")]
-        public string AllocateNonRevenue { get; set; }
-
-        [XmlElement(ElementName = "GUID")]
-        public string GUID { get; set; }
 
         [XmlIgnore]
         public string Alias
@@ -96,61 +80,90 @@ namespace TallyConnector.Models
             }
         }
 
+        [XmlElement(ElementName = "GUID")]
+        public string GUID { get; set; }
+        /// <summary>
+        /// Tally Field - Used for Calculation
+        /// </summary>
+        [XmlElement(ElementName = "BASICGROUPISCALCULABLE")]
+        public string IsCalculable { get; set; }
+
+        /// <summary>
+        /// Tally Field - Net Debit/Credit Balances for Reporting 
+        /// </summary>
+        [XmlElement(ElementName = "ISADDABLE")]
+        public string IsAddable { get; set; }
+
+        /// <summary>
+        /// Tally Field - Method to Allocate when used in purchase invoice
+        /// </summary>
+        [XmlElement(ElementName = "ADDLALLOCTYPE")]
+        public string AddLAllocType { get; set; }
+
+        [XmlElement(ElementName = "ISSUBLEDGER")]
+        public string IsSubledger { get; set; }
+
+
+        [XmlElement(ElementName = "CANDELETE")]
+        public string CanDelete { get; set; } //Ignore This While Creating or Altering
+
         [JsonIgnore]
         [XmlElement(ElementName = "LANGUAGENAME.LIST")]
         public LanguageNameList LanguageNameList { get; set; }
+
         /// <summary>
         /// Accepted Values //Create, Alter, Delete
         /// </summary>
         [JsonIgnore]
         [XmlAttribute(AttributeName = "Action")]
         public string Action { get; set; }
+
     }
+
     [XmlRoot(ElementName = "ENVELOPE")]
-    public class CostCatEnvelope : TallyXmlJson
+    public class GroupEnvelope : TallyXmlJson
     {
 
         [XmlElement(ElementName = "HEADER")]
         public Header Header { get; set; }
 
         [XmlElement(ElementName = "BODY")]
-        public CCBody Body { get; set; } = new CCBody();
+        public GBody Body { get; set; } = new GBody();
     }
 
     [XmlRoot(ElementName = "BODY")]
-    public class CCBody
+    public class GBody
     {
         [XmlElement(ElementName = "DESC")]
         public Description Desc { get; set; } = new Description();
 
         [XmlElement(ElementName = "DATA")]
-        public CCData Data { get; set; } = new CCData();
+        public GData Data { get; set; } = new GData();
     }
 
     [XmlRoot(ElementName = "DATA")]
-    public class CCData
+    public class GData
     {
         [XmlElement(ElementName = "TALLYMESSAGE")]
-        public CCMessage Message { get; set; } = new CCMessage();
+        public GroupMessage Message { get; set; } = new GroupMessage();
 
         [XmlElement(ElementName = "COLLECTION")]
-        public CostCategoryColl Collection { get; set; } = new CostCategoryColl();
+        public GroupColl Collection { get; set; } = new GroupColl();
 
 
     }
 
     [XmlRoot(ElementName = "COLLECTION")]
-    public class CostCategoryColl
+    public class GroupColl
     {
-        [XmlElement(ElementName = "COSTCATEGORY")]
-        public List<CostCategory> CostCategories { get; set; }
+        [XmlElement(ElementName = "GROUP")]
+        public List<Group> Groups { get; set; }
     }
 
     [XmlRoot(ElementName = "TALLYMESSAGE")]
-    public class CCMessage
+    public class GroupMessage
     {
-        [XmlElement(ElementName = "COSTCATEGORY")]
-        public CostCategory CostCategory { get; set; }
+        [XmlElement(ElementName = "GROUP")]
+        public Group Group { get; set; }
     }
-
 }

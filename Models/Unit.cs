@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -10,27 +9,17 @@ using System.Xml.Serialization;
 namespace TallyConnector.Models
 {
     [XmlRoot(ElementName = "UNIT")]
-    public class Unit : TallyXmlJson
+    public class Unit:TallyXmlJson
     {
 
         [XmlElement(ElementName = "MASTERID")]
         public int? TallyId { get; set; }
 
-
         [XmlAttribute(AttributeName = "NAME")]
-        [JsonIgnore]
-        public string OldName { get; set; }
+        public string Name { get; set; }
 
-
-        private string name;
-        [XmlElement(ElementName = "NAME")]
-        [Required]
-        public string Name
-        {
-            get { return (name == null || name == string.Empty) ? OldName : name; }
-            set => name = value;
-        }
-
+        [XmlIgnore]
+        public string VName { get; set; }
 
         [XmlElement(ElementName = "ORIGINALNAME")]
         public string OriginalName { get; set; }
@@ -60,28 +49,6 @@ namespace TallyConnector.Models
 
         [XmlElement(ElementName = "GUID")]
         public string GUID { get; set; }
-        private string _IsSimpleUnit;
-        [XmlElement(ElementName = "ISSIMPLEUNIT")]
-        public string IsSimpleUnit
-        {
-            get { return IssimpleUnit(); }
-            set { _IsSimpleUnit = value; }
-        }
-
-        [XmlElement(ElementName = "ISGSTEXCLUDED")]
-        public string IsGstExcluded { get; set; }
-
-        [XmlElement(ElementName = "CONVERSION")]
-        public double Conversion { get; set; }
-        public string IssimpleUnit()
-        {
-            if (AdditionalUnits is null || BaseUnit is null || AdditionalUnits == string.Empty || BaseUnit == string.Empty)
-            {
-                return "YES";
-            }
-            return "NO";
-        }
-
     }
     [XmlRoot(ElementName = "ENVELOPE")]
     public class UnitEnvelope : TallyXmlJson

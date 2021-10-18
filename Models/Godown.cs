@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -9,36 +8,63 @@ using System.Xml.Serialization;
 
 namespace TallyConnector.Models
 {
-    [XmlRoot(ElementName = "COSTCATEGORY")]
-    public class CostCategory:TallyXmlJson
+    [XmlRoot(ElementName = "GODOWN")]
+    public class Godown:TallyXmlJson
     {
+
+        public Godown()
+        {
+            FAddress = new HAddress();
+        }
+
         [XmlElement(ElementName = "MASTERID")]
         public int? TallyId { get; set; }
 
         [XmlAttribute(AttributeName = "NAME")]
-        [JsonIgnore]
-        public string OldName { get; set; }
-
-        private string name;
-        [XmlElement(ElementName = "NAME")]
-        [Required]
-        public string Name
-        {
-            get { return (name == null || name == string.Empty) ? OldName : name; }
-            set => name = value;
-        }
+        public string Name { get; set; }
 
         [XmlIgnore]
         public string VName { get; set; }
 
-        [XmlElement(ElementName = "ALLOCATEREVENUE")]
-        public string AllocateRevenue { get; set; }
+        [XmlElement(ElementName = "PARENT")]
+        public string Parent { get; set; }
+        [JsonIgnore]
+        [XmlElement(ElementName = "ADDRESS.LIST")]
+        public HAddress FAddress { get; set; }
 
-        [XmlElement(ElementName = "ALLOCATENONREVENUE")]
-        public string AllocateNonRevenue { get; set; }
+        
+        [XmlIgnore]
+        public string Address
+        {
+            get
+            {
+                return FAddress.FullAddress;
+            }
 
-        [XmlElement(ElementName = "GUID")]
-        public string GUID { get; set; }
+            set
+            {
+                this.FAddress = new HAddress();
+                this.FAddress.FullAddress = value;
+
+            }
+
+        }
+
+        [XmlElement(ElementName = "PINCODE")]
+        public string PinCode { get; set; }
+
+        [XmlElement(ElementName = "PHONENUMBER")]
+        public string PhoneNumber { get; set; }
+
+        [XmlElement(ElementName = "ISEXTERNAL")]
+        public string IsExternal { get; set; } // ThirdParty Stock with Us
+
+        [XmlElement(ElementName = "ISINTERNAL")]
+        public string IsInternal { get; set; } // Our Stock With Third Party
+
+        [XmlElement(ElementName = "CANDELETE")]
+        public string CanDelete { get; set; }
+
 
         [XmlIgnore]
         public string Alias
@@ -75,10 +101,10 @@ namespace TallyConnector.Models
             set
             {
                 this.LanguageNameList = new LanguageNameList();
-                
+               
                 if (value != null)
                 {
-                    List<string> lis = value.Split("..\n".ToCharArray()).ToList();
+                    List<string> lis = value.Split('\n').ToList();
 
                     LanguageNameList.NameList.NAMES.Add(Name);
                     if (value != "")
@@ -105,52 +131,55 @@ namespace TallyConnector.Models
         [JsonIgnore]
         [XmlAttribute(AttributeName = "Action")]
         public string Action { get; set; }
+
+        [XmlElement(ElementName = "GUID")]
+        public string GUID { get; set; }
     }
+
     [XmlRoot(ElementName = "ENVELOPE")]
-    public class CostCatEnvelope : TallyXmlJson
+    public class GodownEnvelope : TallyXmlJson
     {
 
         [XmlElement(ElementName = "HEADER")]
         public Header Header { get; set; }
 
         [XmlElement(ElementName = "BODY")]
-        public CCBody Body { get; set; } = new CCBody();
+        public GdwnBody Body { get; set; } = new GdwnBody();
     }
 
     [XmlRoot(ElementName = "BODY")]
-    public class CCBody
+    public class GdwnBody
     {
         [XmlElement(ElementName = "DESC")]
         public Description Desc { get; set; } = new Description();
 
         [XmlElement(ElementName = "DATA")]
-        public CCData Data { get; set; } = new CCData();
+        public GdwnData Data { get; set; } = new GdwnData();
     }
 
     [XmlRoot(ElementName = "DATA")]
-    public class CCData
+    public class GdwnData
     {
         [XmlElement(ElementName = "TALLYMESSAGE")]
-        public CCMessage Message { get; set; } = new CCMessage();
+        public GdwnMessage Message { get; set; } = new GdwnMessage();
 
         [XmlElement(ElementName = "COLLECTION")]
-        public CostCategoryColl Collection { get; set; } = new CostCategoryColl();
+        public GodownColl Collection { get; set; } = new GodownColl();
 
 
     }
 
     [XmlRoot(ElementName = "COLLECTION")]
-    public class CostCategoryColl
+    public class GodownColl
     {
-        [XmlElement(ElementName = "COSTCATEGORY")]
-        public List<CostCategory> CostCategories { get; set; }
+        [XmlElement(ElementName = "GODOWN")]
+        public List<Godown> Godowns { get; set; }
     }
 
     [XmlRoot(ElementName = "TALLYMESSAGE")]
-    public class CCMessage
+    public class GdwnMessage
     {
-        [XmlElement(ElementName = "COSTCATEGORY")]
-        public CostCategory CostCategory { get; set; }
+        [XmlElement(ElementName = "GODOWN")]
+        public Godown Godown { get; set; }
     }
-
 }

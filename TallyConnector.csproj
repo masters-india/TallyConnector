@@ -110,11 +110,9 @@
     <Compile Include="Models\Godown.cs" />
     <Compile Include="Models\Group.cs" />
     <Compile Include="Models\Ledger.cs" />
-    <Compile Include="Models\LicenseInfo.cs" />
     <Compile Include="Models\Names.cs" />
     <Compile Include="Models\ObjEnv.cs" />
     <Compile Include="Models\PaymentDetails.cs" />
-    <Compile Include="Models\ReportField.cs" />
     <Compile Include="Models\StockCategory.cs" />
     <Compile Include="Models\StockGroup.cs" />
     <Compile Include="Models\StockItem.cs" />

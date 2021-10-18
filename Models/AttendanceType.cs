@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -9,36 +8,28 @@ using System.Xml.Serialization;
 
 namespace TallyConnector.Models
 {
-    [XmlRoot(ElementName = "COSTCATEGORY")]
-    public class CostCategory:TallyXmlJson
+    [XmlRoot(ElementName = "ATTENDANCETYPE")]
+    public class AttendanceType: TallyXmlJson
     {
-        [XmlElement(ElementName = "MASTERID")]
-        public int? TallyId { get; set; }
-
         [XmlAttribute(AttributeName = "NAME")]
-        [JsonIgnore]
-        public string OldName { get; set; }
+        public string Name { get; set; }
 
-        private string name;
-        [XmlElement(ElementName = "NAME")]
-        [Required]
-        public string Name
-        {
-            get { return (name == null || name == string.Empty) ? OldName : name; }
-            set => name = value;
-        }
+        [XmlElement(ElementName = "ATTENDANCEPRODUCTIONTYPE")]
+        public string ProductionType { get; set; }
+
+        [XmlElement(ElementName = "ATTENDANCEPERIOD")]
+        public string Period { get; set; }
+
+        [XmlElement(ElementName = "PARENT")]
+        public string Parent { get; set; }
+
+        [XmlElement(ElementName = "BASEUNITS")]
+        public string BaseUnit { get; set; }
+
+
 
         [XmlIgnore]
         public string VName { get; set; }
-
-        [XmlElement(ElementName = "ALLOCATEREVENUE")]
-        public string AllocateRevenue { get; set; }
-
-        [XmlElement(ElementName = "ALLOCATENONREVENUE")]
-        public string AllocateNonRevenue { get; set; }
-
-        [XmlElement(ElementName = "GUID")]
-        public string GUID { get; set; }
 
         [XmlIgnore]
         public string Alias
@@ -96,61 +87,70 @@ namespace TallyConnector.Models
             }
         }
 
+        [XmlElement(ElementName = "CANDELETE")]
+        public string CanDelete { get; set; } //Ignore This While Creating or Altering
+
         [JsonIgnore]
         [XmlElement(ElementName = "LANGUAGENAME.LIST")]
         public LanguageNameList LanguageNameList { get; set; }
+
         /// <summary>
         /// Accepted Values //Create, Alter, Delete
         /// </summary>
         [JsonIgnore]
         [XmlAttribute(AttributeName = "Action")]
         public string Action { get; set; }
+
     }
+
+
+
     [XmlRoot(ElementName = "ENVELOPE")]
-    public class CostCatEnvelope : TallyXmlJson
+    public class AttendanceEnvelope : TallyXmlJson
     {
 
         [XmlElement(ElementName = "HEADER")]
         public Header Header { get; set; }
 
         [XmlElement(ElementName = "BODY")]
-        public CCBody Body { get; set; } = new CCBody();
+        public AttendanceBody Body { get; set; } = new AttendanceBody();
     }
 
     [XmlRoot(ElementName = "BODY")]
-    public class CCBody
+    public class AttendanceBody
     {
         [XmlElement(ElementName = "DESC")]
         public Description Desc { get; set; } = new Description();
 
         [XmlElement(ElementName = "DATA")]
-        public CCData Data { get; set; } = new CCData();
+        public AttendanceData Data { get; set; } = new AttendanceData();
     }
 
     [XmlRoot(ElementName = "DATA")]
-    public class CCData
+    public class AttendanceData
     {
         [XmlElement(ElementName = "TALLYMESSAGE")]
-        public CCMessage Message { get; set; } = new CCMessage();
+        public AttendanceMessage Message { get; set; } = new AttendanceMessage();
+
 
         [XmlElement(ElementName = "COLLECTION")]
-        public CostCategoryColl Collection { get; set; } = new CostCategoryColl();
+        public AttendanceTypeColl Collection { get; set; } = new AttendanceTypeColl();
 
 
     }
 
     [XmlRoot(ElementName = "COLLECTION")]
-    public class CostCategoryColl
+    public class AttendanceTypeColl
     {
-        [XmlElement(ElementName = "COSTCATEGORY")]
-        public List<CostCategory> CostCategories { get; set; }
+        [XmlElement(ElementName = "ATTENDANCETYPE")]
+        public List<AttendanceType> AttendanceTypes { get; set; }
     }
+
 
     [XmlRoot(ElementName = "TALLYMESSAGE")]
-    public class CCMessage
+    public class AttendanceMessage
     {
-        [XmlElement(ElementName = "COSTCATEGORY")]
-        public CostCategory CostCategory { get; set; }
+        [XmlElement(ElementName = "ATTENDANCETYPE")]
+        public AttendanceType AttendanceType { get; set; }
     }
-
 }

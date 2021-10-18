@@ -15,7 +15,7 @@ namespace TallyConnector.Models
 
         public Godown()
         {
-            FAddress = new();
+            FAddress = new HAddress();
         }
 
         [XmlElement(ElementName = "MASTERID")]
@@ -53,7 +53,7 @@ namespace TallyConnector.Models
 
             set
             {
-                this.FAddress = new();
+                this.FAddress = new HAddress();
                 this.FAddress.FullAddress = value;
 
             }
@@ -86,7 +86,6 @@ namespace TallyConnector.Models
                     if (VName == null)
                     {
                         VName = this.LanguageNameList.NameList.NAMES[0];
-                        Name ??= OldName;
                     }
                     if (Name == VName)
                     {
@@ -111,7 +110,7 @@ namespace TallyConnector.Models
             }
             set
             {
-                this.LanguageNameList = new();
+                this.LanguageNameList = new LanguageNameList();
                
                 if (value != null)
                 {
@@ -155,24 +154,24 @@ namespace TallyConnector.Models
         public Header Header { get; set; }
 
         [XmlElement(ElementName = "BODY")]
-        public GdwnBody Body { get; set; } = new();
+        public GdwnBody Body { get; set; } = new GdwnBody();
     }
 
     [XmlRoot(ElementName = "BODY")]
     public class GdwnBody
     {
         [XmlElement(ElementName = "DESC")]
-        public Description Desc { get; set; } = new();
+        public Description Desc { get; set; } = new Description();
 
         [XmlElement(ElementName = "DATA")]
-        public GdwnData Data { get; set; } = new();
+        public GdwnData Data { get; set; } = new GdwnData();
     }
 
     [XmlRoot(ElementName = "DATA")]
     public class GdwnData
     {
         [XmlElement(ElementName = "TALLYMESSAGE")]
-        public GdwnMessage Message { get; set; } = new();
+        public GdwnMessage Message { get; set; } = new GdwnMessage();
 
         [XmlElement(ElementName = "COLLECTION")]
         public GodownColl Collection { get; set; } = new GodownColl();
