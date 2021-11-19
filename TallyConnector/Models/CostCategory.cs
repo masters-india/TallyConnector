@@ -50,6 +50,7 @@ namespace TallyConnector.Models
                     if (VName == null)
                     {
                         VName = this.LanguageNameList.NameList.NAMES[0];
+                        Name ??= OldName;
                     }
                     if (Name == VName)
                     {
