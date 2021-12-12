@@ -64,11 +64,7 @@ namespace TallyConnector.Models
         [XmlElement(ElementName = "ISSIMPLEUNIT")]
         public string IsSimpleUnit
         {
-            get
-            {
-                _IsSimpleUnit = IssimpleUnit();
-                return _IsSimpleUnit;
-            }
+            get { return IssimpleUnit(); }
             set { _IsSimpleUnit = value; }
         }
 
